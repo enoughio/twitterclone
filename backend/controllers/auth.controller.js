@@ -141,7 +141,6 @@ export const getMe = async (req, res) => {
         console.log("Received req.user in getMe:", req.user);
         const user = await User.findById(userId).select("-password");
 
-
         if(!user){
             throw new Error("User not found")
         }       

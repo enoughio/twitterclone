@@ -25,7 +25,7 @@ export const protectRoute = async (req, res, next) => {
         if (!user) {
             throw new Error("User not found in protectRoute");
         }
-        req.user = user; // Make sure only `user._id` is passed to avoid confusion.
+        req.user = user; 
         next();
 
     } catch (error) {
