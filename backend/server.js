@@ -1,6 +1,7 @@
-import express from "express";
+import express, { urlencoded } from "express";
 import dotenv from "dotenv";   // 39min
 import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken";
 
 dotenv.config();
 
@@ -13,8 +14,9 @@ const app = express();
 
 
 app.use(express.json());  // to parse json data
+app.use(urlencoded({extended: true}));  // to parse form data
 
-
+app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 
 
