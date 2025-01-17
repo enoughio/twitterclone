@@ -1,3 +1,4 @@
+import Notification from "../models/notification.model.js";
 import User from "../models/user.model.js";
 
 export const getUserProfile = async (req, res) => { 
@@ -43,19 +44,22 @@ export const followUserProfile = async (req, res) => {
             await User.findByIdAndUpdate(id, {$pull: {followers: currentUser._id}});
             // remove following to currentUser
             await User.findByIdAndUpdate(currentUser._id, {$pull: {following: id}});
-            res.status(200).json({message: "Unfollowed successfully"});
 
+            res.status(200).json({message: "Unfollowed successfully"});     
+            
         }else{// Follow
             
             // add follower to userToModify
             await User.findByIdAndUpdate(id, {$push: {followers: currentUser._id}});
             // add following to currentUser
             await User.findByIdAndUpdate(currentUser._id, {$push: {following: id}});
+
+            // Create notification
+            const notification = new Notification({type : "follow", to: id, from: req.user._id});
+            await notification.save();
+            //TODO return the id of the user to response 
             res.status(200).json({message: "Followed successfully"});
-
-
         }
-
         
     } catch (error) {
         console.trace("Error in followUserProfile", error);  
