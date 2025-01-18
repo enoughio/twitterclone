@@ -21,7 +21,7 @@ export const protectRoute = async (req, res, next) => {
 
         // get user from db
         const user = await User.findById(decode.id).select("-password");
-        console.log("User fetched in protectRoute middleware:", user); // Add this line
+        // console.log("User fetched in protectRoute middleware:", user); 
         if (!user) {
             throw new Error("User not found in protectRoute");
         }
