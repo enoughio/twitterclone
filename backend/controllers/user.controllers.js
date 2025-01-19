@@ -201,6 +201,7 @@ export const getSuggesteduser = async (req, res) => {
 // Helper function to upload images to Cloudinary
 
 
+
 const uploadImage = async (image, folderName) => {
     const timestamp = Math.floor(Date.now() / 1000);
     const publicId = `${folderName}/${timestamp}`;
@@ -239,6 +240,7 @@ export const updateUser = async (req, res) => {
         // Fetch user from database
         const user = await User.findById(req.user._id);
         if (!user) return res.status(404).json({ error: "User not found." });
+
 
         // Handle password update
         let hashedPassword = user.password;
