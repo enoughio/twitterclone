@@ -3,8 +3,6 @@ import User from "../models/user.model.js";
 import { generateTokenAndSetCookie } from "../lib/generateToken.js";
 
 export const signup = async (req, res) => {
-
-
     try {
         const { fullName, userName, email, password } = req.body;
 
@@ -73,30 +71,6 @@ export const signup = async (req, res) => {
 }
 
 
-export const logout = async (req, res) => {
-
-    try {
-
-        // const { userName, password } = req.body;
-        // const user = await User.findOne({ userName: userName });
-        // const isvalidPassword = await bcrypt.compare(
-        //     password,
-        //     user.password
-        // )
-        // if (user || isvalidPassword) {
-        // res.cookie("jwt", "", {maxAge: 0});
-        // }
-
-            res.clearCookie("jwt");
-            res.json({ message: "User logged out succesfully" })
-
-    } catch (error) {
-        console.trace(error, "error in logout controller");
-        res.status(500).json({ error: error.message })
-    }
-
-}
-
 
 export const login = async (req, res) => {
 
@@ -131,6 +105,33 @@ export const login = async (req, res) => {
     }
 
 }
+
+
+
+export const logout = async (req, res) => {
+
+    try {
+
+        // const { userName, password } = req.body;
+        // const user = await User.findOne({ userName: userName });
+        // const isvalidPassword = await bcrypt.compare(
+        //     password,
+        //     user.password
+        // )
+        // if (user || isvalidPassword) {
+        // res.cookie("jwt", "", {maxAge: 0});
+        // }
+
+            res.clearCookie("jwt");
+            res.json({ message: "User logged out succesfully" })
+
+    } catch (error) {
+        console.trace(error, "error in logout controller");
+        res.status(500).json({ error: error.message })
+    }
+
+}
+
 
 
 
