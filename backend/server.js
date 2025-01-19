@@ -4,9 +4,10 @@ import cookieParser from "cookie-parser";
 import jwt from "jsonwebtoken";
 import { v2 as cloudinary } from "cloudinary";
 
+import connectMongoDb from "./db/connectMongoDb.js";
 import authRoutes from "./routes/auth.route.js";
 import userRoutes from "./routes/user.route.js";
-import connectMongoDb from "./db/connectMongoDb.js";
+import postRoutes from "./routes/post.route.js";
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use(urlencoded({ extended: true }));  // to parse form data
 app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/post", postRoutes);
 
 
 app.get("/", (req, res) => {
