@@ -4,8 +4,8 @@ export const uploadImage = async (image, folderName) => {
 
     try {
         const uploadResult = await cloudinary.uploader.upload(image, {
-            public_id: publicId,
-            folder: folderName,
+            public_id: publicId,  // public_id is the name of the image in cloudinary 
+            folder: folderName,  // folder name in cloudinary where the image will be stored 
         });
         return uploadResult.secure_url;
     } catch (error) {

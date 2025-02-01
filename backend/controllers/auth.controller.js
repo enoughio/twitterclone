@@ -76,6 +76,10 @@ export const login = async (req, res) => {
 
     try {
         const { userName, password } = req.body;
+        if(!userName || !password){
+            return res.status(400).json({error: "please fill all the fields"})
+        }
+
         const user = await User.findOne({ userName: userName });
         const isvalidPassword = await bcrypt.compare(
             password,

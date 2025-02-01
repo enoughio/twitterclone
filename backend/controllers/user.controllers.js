@@ -40,7 +40,6 @@ export const followUserProfile = async (req, res) => {
         }
 
         const isAlreadyFollow = currentUser.following.includes(id);
-
         if (isAlreadyFollow) {// Unfollow
 
             // remove follower to userToModify
@@ -209,7 +208,7 @@ export const getSuggesteduser = async (req, res) => {
 
 
 export const updateUser = async (req, res) => {
-    const { email, userName, fullName, currentPassword, newPassword, bio, link } = req.body;
+    const { email, fullName, currentPassword, newPassword, bio, link } = req.body;
     let { profileImage, coverImage } = req.body;
 
     try {
@@ -218,7 +217,7 @@ export const updateUser = async (req, res) => {
             return res.status(400).json({ error: "Provide both current and new password." });
         }
 
-        // Fetch user from database
+        // Fetch user from database 
         const user = await User.findById(req.user._id);
         if (!user) return res.status(404).json({ error: "User not found." });
 

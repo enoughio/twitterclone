@@ -1,5 +1,5 @@
 import mongoose, { Types } from "mongoose";
-import User from "./user.model";
+import User from "./user.model.js";
 
 const postSchema = mongoose.Schema({
 
@@ -24,8 +24,9 @@ const postSchema = mongoose.Schema({
             ref: User,
         }
     ],
+    
 
-    Comment: [
+    comments: [
         {
             text: {
                 type: String,
