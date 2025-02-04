@@ -1,47 +1,42 @@
-import mongoose, { Types } from "mongoose";
-import User from "./user.model.js";
+import mongoose from "mongoose";
 
-const postSchema = mongoose.Schema({
-
+const postSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: User,
-        require: true
+        ref: "User", // Use model name as a string
+        required: true, 
     },
 
-    text : {
+    text: {
         type: String
     },
 
-    img : {
-        type : String
+    img: {
+        type: String
     },
 
     likes: [
-
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: User,
+            ref: "User", // Use model name as a string
         }
     ],
-    
 
     comments: [
         {
             text: {
                 type: String,
-                require: true
+                required: true 
             },
             user: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: User,
-                require: true
+                ref: "User", // Use model name as a string
+                required: true 
             }
         }
     ]
 
-}, { timeStamp: true })
-
+}, { timestamps: true }); // (timestamps)
 
 const Post = mongoose.model("Post", postSchema);
 
