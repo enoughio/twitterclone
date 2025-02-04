@@ -3,7 +3,6 @@ import Post from "../models/post.model.js";
 import User from "../models/user.model.js";
 import Notification from "../models/notification.model.js";
 
-
 export const getAllPost = async (req, res) => {
 
     try {
@@ -27,6 +26,35 @@ export const getAllPost = async (req, res) => {
 
 }
 
+
+export const getUserPost = async (req, res) => {
+    try {
+        const { userName } = req.params;
+
+        const user = await User.findOne({ userName })
+        // if(!user)
+        //     return res.status(404).json({error : "user not found"});
+
+        const userPost = await Post.find({user : user._id}).sort({ createdAt: -1}).populate({
+            path: "user",
+            select: "-password"
+        }).populate({
+            path: "comments.user",
+            select: "-password",
+        })
+
+
+            return res.status(200).json(userPost);
+
+    } catch (error) {
+        
+        console.log("error in getUserPost", error);
+        return res.status(500).json({
+            error: "intetrnal server error"
+        })
+
+    }
+}
 
 export const createPost = async (req, res) => {
 
@@ -72,13 +100,11 @@ export const createPost = async (req, res) => {
     }
 }
 
-
-
 export const deletePost = async (req, res) => {
 
     try {
         const userId = req.user._id;
-        console.log(req.params.id)
+        // console.log(req.params.id)
         const post = await Post.findById(req.params.id);
 
         if (!post) {
@@ -115,8 +141,6 @@ export const deletePost = async (req, res) => {
     }
 };
 
-
-
 export const commetOnPost = async (req, res) => {
 
     try {
@@ -148,7 +172,6 @@ export const commetOnPost = async (req, res) => {
         res.status(500).json({ error: "Internal server error" })
     }
 }
-
 
 export const likeUnlikePost = async (req, res) => {
 
@@ -212,7 +235,6 @@ export const likeUnlikePost = async (req, res) => {
     }
 }
 
-
 export const getLikedPost = async (req, res) => {
     try {
         
@@ -238,8 +260,6 @@ export const getLikedPost = async (req, res) => {
         res.status(500).json({ error: "Internal server error" })
     }
 }
-
-
 
 export const getFollowedPost = async (req, res) => {
     try {
@@ -268,5 +288,41 @@ export const getFollowedPost = async (req, res) => {
         console.trace("Error in getFollowedPost", error);
         res.status(500).json({ error: "Internal server error" })    
     }
-
 }
+
+
+export const login = async (req, res) => {
+    try {
+        const { userName, password } = req.body;
+        if (!userName || !password) {
+            return res.status(400).json({ error: "please fill all the fields" });
+        }
+
+        const user = await User.findOne({ userName: userName });
+        if (!user) {
+            return res.status(400).json({ error: "Invalid username or password" });
+        }
+
+        const isvalidPassword = await bcrypt.compare(password, user.password);
+        if (!isvalidPassword) {
+            return res.status(400).json({ error: "Invalid username or password" });
+        }
+
+        generateTokenAndSetCookie(user._id, res);
+        res.status(200).json({
+            _id: user._id,
+            fullName: user.fullName,
+            userName: user.userName,
+            email: user.email,
+            followers: user.followers,
+            following: user.following,
+            profileImage: user.profileImage,
+            coverImage: user.coverImage,
+        });
+
+    } catch (error) {
+        console.trace(error, "error in login controller");
+        res.status(500).json({ error: error.message });
+    }
+};
+

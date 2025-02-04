@@ -73,7 +73,6 @@ export const signup = async (req, res) => {
 
 
 export const login = async (req, res) => {
-
     try {
         const { userName, password } = req.body;
         if(!userName || !password){
@@ -105,7 +104,6 @@ export const login = async (req, res) => {
     } catch (error) {
         console.trace(error, "error in logoin controller");
         res.status(500).json({ error: error.message })
-
     }
 
 }
