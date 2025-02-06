@@ -7,27 +7,27 @@ export const signup = async (req, res) => {
         const { fullName, userName, email, password } = req.body;
 
         if (!fullName || !userName || !email || !password) {
-            throw new Error("All fields are required")
+            return res.status(400).json({ error: "please fill all the fields" })
         }
 
 
         const emailRegex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
         if (!emailRegex.test(email)) {
-            throw new Error("Invalid email")
+            return res.status(400).json({ error: "Invalid email" })
         }
 
         const existingUser = await User.findOne({ userName: userName });
         if (existingUser) {
-            throw new Error("Username already exists")
+            return res.status(400).json({ error: "Username already exists" })   
         }
 
         const existEmail = await User.findOne({ email: email });
         if (existEmail) {
-            throw new Error("Email already exists")
+            return res.status(400).json({ error: "Email already exists" })
         }
 
         if (password.length < 6) {
-            throw new Error("Password must be atleast 6 characters long")
+            return  res.status(400).json({ error: "Password must be atleast 6 characters" })
         }
 
         //hash password
@@ -41,7 +41,7 @@ export const signup = async (req, res) => {
             email,
             password: hashedPassword
         })
-
+        
 
         if (newUser) {
             generateTokenAndSetCookie(newUser._id, res);
@@ -58,9 +58,11 @@ export const signup = async (req, res) => {
                 // bio : newUser.bio,
                 // link : newUser.link
             })
+
         } else {
             res.status(400).json({ error: "User not created" })
         }
+        console.log("User created successfully");
 
     } catch (error) {
 
@@ -86,7 +88,7 @@ export const login = async (req, res) => {
         )
 
         if(!user || !isvalidPassword){
-            throw new Error("Invalid username or password")
+            return res.status(400).json({error: "Invalid username or password"})
         }
 
         generateTokenAndSetCookie(user._id, res);   
@@ -123,7 +125,6 @@ export const logout = async (req, res) => {
         // if (user || isvalidPassword) {
         // res.cookie("jwt", "", {maxAge: 0});
         // }
-
             res.clearCookie("jwt");
             res.json({ message: "User logged out succesfully" })
 
@@ -145,7 +146,7 @@ export const getMe = async (req, res) => {
         const user = await User.findById(userId).select("-password");
 
         if(!user){
-            throw new Error("User not found")
+            return res.status(404).json({error: "User not found" })
         }       
         res.status(200).json(user)
  

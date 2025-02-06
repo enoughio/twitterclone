@@ -4,7 +4,8 @@ import Posts from "../../components/common/Posts.jsx";
 import CreatePost from "./CreatePost.jsx";
 
 const HomePage = () => {
-	const [feedType, setFeedType] = useState("forYou");
+	// const [feedType, setFeedType] = useState("forYou");
+	const [feedType, setFeedType ] = useState("forYou");
 
 	return (
 		<>
