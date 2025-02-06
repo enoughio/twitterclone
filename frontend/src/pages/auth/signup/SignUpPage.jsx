@@ -8,6 +8,8 @@ import { FaUser } from "react-icons/fa";
 import { MdPassword } from "react-icons/md";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 
+
+
 const SignUpPage = () => {
     const [formData, setFormData] = useState({
 		email: "",
@@ -20,6 +22,8 @@ const SignUpPage = () => {
 		e.preventDefault();
 		console.log(formData);
 	};
+
+	
 
 	const handleInputChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
