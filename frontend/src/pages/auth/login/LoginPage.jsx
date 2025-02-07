@@ -5,23 +5,63 @@ import XSvg from "../../../components/svgs/logo.jsx";
 
 import { MdOutlineMail } from "react-icons/md";
 import { MdPassword } from "react-icons/md";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import axios from "axios";
+import LoadingSpinner from "../../../components/common/LoadingSpinner.jsx";
 
 const LoginPage = () => {
+
+	const queryClient = useQueryClient()
+
+	// query function for login
+	const Login = async ({userName, password}) => {
+		try {
+			const res = await axios.post("/api/auth/login", {
+				userName,
+				password
+			})
+			
+			return res.data;	// return data
+
+		} catch (error) {
+			// console.log(error.response || "Inernal Server Error");
+			throw new Error( error.response?.data?.error || "Internal server Error");
+
+		}
+	}
+
+	const { mutate, isError, isPending, error} = useMutation({
+		mutationKey:['login'],
+		mutationFn: (formData) => Login(formData),
+		onSuccess: (data) => {
+			// toast.success("Login succesfully")
+			queryClient.invalidateQueries({
+				queryKey: ["authUser"]
+			})
+		},
+		onError: (error) => {
+			throw new Error( error.message || "Failed to login")
+		}
+
+	})
+
 	const [formData, setFormData] = useState({
-		username: "",
+		userName: "",
 		password: "",
 	});
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		console.log(formData);
+		// console.log(formData);
+		mutate(formData)
 	};
 
 	const handleInputChange = (e) => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
-	const isError = false;
+	// const isError = false;
 
 	return (
 		<div className='max-w-screen-xl mx-auto flex h-screen'>
@@ -38,10 +78,10 @@ const LoginPage = () => {
 						<input
 							type='text'
 							className='grow'
-							placeholder='username'
-							name='username'
+							placeholder='userName'
+							name='userName'
 							onChange={handleInputChange}
-							value={formData.username}
+							value={formData.userName}
 						/>
 					</label>
 
@@ -56,8 +96,12 @@ const LoginPage = () => {
 							value={formData.password}
 						/>
 					</label>
-					<button className='btn rounded-full btn-primary text-white'>Login</button>
-					{isError && <p className='text-red-500'>Something went wrong</p>}
+					<button className='btn rounded-full btn-primary text-white'>
+						{
+							isPending? <LoadingSpinner /> : "Login"
+						}
+					</button>
+					{isError && <p className='text-red-500'>{ error.message }</p>}
 				</form>
 
 

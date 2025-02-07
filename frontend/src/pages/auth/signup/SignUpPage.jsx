@@ -32,35 +32,40 @@ const SignUpPage = () => {
   };
 
   // function to signup
+{
+  /*
+  
+  
+  const signup = async ({ email, userName, fullName, password }) => {
+  	try {
+  	  const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+  		  "Content-Type": "application/json",
+  		},
+  		body: JSON.stringify({ email, userName, fullName, password }),
+    });
+    
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to create account");
+    
+    toast.success("Account created successfully");
+    return data; // Return response data
+  	} catch (error) {
+  	  console.error("Something went wrong in signUp:", error);
+  	  toast.error(error.message);
+  	  return { error: "Internal server error" };
+  	}
+  };
 
-  // const signup = async ({ email, userName, fullName, password }) => {
-  // 	try {
-  // 	  const res = await fetch("/api/auth/signup", {
-  // 		method: "POST",
-  // 		headers: {
-  // 		  "Content-Type": "application/json",
-  // 		},
-  // 		body: JSON.stringify({ email, userName, fullName, password }),
-  // 	  });
+  // useMutation hook for signup functionality
+  const { mutate, isError, isPending, error } = useMutation({
+  	mutationKey: ["signup"],
+  	mutationFn: (formData) => signup(formData),
+  });
 
-  // 	  const data = await res.json();
-  // 	  if (!res.ok) throw new Error(data.error || "Failed to create account");
 
-  // 	  toast.success("Account created successfully");
-  // 	  return data; // Return response data
-  // 	} catch (error) {
-  // 	  console.error("Something went wrong in signUp:", error);
-  // 	  toast.error(error.message);
-  // 	  return { error: "Internal server error" };
-  // 	}
-  //   };
-
-  //   // useMutation hook for signup functionality
-  //   const { mutate, isError, isPending, error } = useMutation({
-  // 	mutationKey: ["signup"],
-  // 	mutationFn: (formData) => signup(formData),
-  //   });
-
+*/}
   const signup = async ({ email, userName, fullName, password }) => {
     try {
       const res = await axios.post("/api/auth/signup", {
@@ -74,9 +79,9 @@ const SignUpPage = () => {
 
       return data; // Return response data
     } catch (error) {
-      console.error("Something went wrong in signUp:", error);
-      toast.error(error.response?.data?.error || "Internal server error");
-      return { error: "Internal server error" };
+      console.error("Something went wrong in signUp:", error.response);
+      // toast.error(error.response?.data?.error || "Internal server error");
+      throw new Error(error.response?.data?.error || "Internal server error"); 
     }
   };
 
@@ -86,7 +91,7 @@ const SignUpPage = () => {
     mutationFn: (formData) => signup(formData),
     onSuccess: (data) => {
       toast.success("Account created successfully");
-      console.log("data", data);
+      // console.log("data", data);
     },
   });
 
@@ -156,7 +161,7 @@ const SignUpPage = () => {
               isPending ? <LoadingSpinner /> : "Sign up"
             }
           </button>
-          {isError && <p className="text-red-500">Something went wrong</p>}
+          {isError && <p className="text-red-500">{ error.message }</p>}
         </form>
         <div className="flex flex-col lg:w-2/3 gap-2 mt-4">
           <p className="text-white text-lg">Already have an account?</p>
